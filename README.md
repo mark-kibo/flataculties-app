@@ -13,7 +13,7 @@ To run the Flatacuties app locally, follow these steps:
 
     Clone the repository from GitHub.
     Install the necessary dependencies by running npm install in the project directory.
-    Start the local server by running json-server --watch db.json
+    Start the local server by running json-server --watch db.json on the terminal.Note it will not run on a powershell terminal
     Open your web browser and navigate to http://localhost:3000 to access the app.
 
 ## Technologies Used
