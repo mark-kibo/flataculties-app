@@ -156,6 +156,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         // post out data to the db
         postAnimal(body)
+        form.reset()
     })
 
 
