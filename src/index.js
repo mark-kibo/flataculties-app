@@ -43,6 +43,41 @@ const fetchSpecficAnimal = async (id) => {
     }
 }
 
+// create a post request to add a new animal
+// takes a body object as a parameter body-{
+    // "name":"animalname",
+    // "image":"imageurl",
+    // "votes":"0"
+// }
+
+const postAnimal = async (body) => {
+    // create our options for the request
+    let options={
+        method:"POST",
+        headers:{
+            "Content-Type":"application/json",
+            Accept:"application/json"
+        },
+        body:JSON.stringify(body)
+    }
+    try {
+        // get our response and pass our options
+        const response = await fetch("http://localhost:3000/characters", options)
+        // check if our request is accepted
+        if (response.status != 200) {
+            // throw aan error of our own
+            throw new Error("the passed data is not valid")
+        } else {
+            // if request is valid return our data
+            const data = await response.json()
+            return data;
+        }
+
+    } catch (e) {
+        console.log(e)
+    }
+}
+
 
 // launch our dom
 document.addEventListener("DOMContentLoaded", () => {
@@ -52,7 +87,11 @@ document.addEventListener("DOMContentLoaded", () => {
     let characterInfoImage=document.querySelector("#image")
     let characterInfoVote=document.querySelector("#vote-count")
     let form=document.querySelector("#votes-form")
+    let resetButton=document.querySelector("#reset-btn")
+    let addAnimalForm=document.querySelector("#character-form")
 
+    // store my original vote
+    let originalVoteCount = characterInfoVote.innerHTML;
 
     // fetch my data from local db
     let animalNames = fetchAllAnimals()
@@ -72,17 +111,52 @@ document.addEventListener("DOMContentLoaded", () => {
                     characterInfoName.innerHTML=`${data.name}`
                     characterInfoImage.src=`${data.image}`
                     characterInfoVote.innerHTML=`${data.votes}`
+                    // update my original vote
+                    originalVoteCount=data.votes
                     
                 })
             })
         })
     })
-
     // add event listener on form to add votes to image
     form.addEventListener("submit", (e)=>{
-        console.log(e.target.querySelector("#votes").value)
+        e.preventDefault()
+        // set my original vote count to the animal vote
+         // check if my vote container actually has a number on it
+        if (Number.isInteger(parseInt(characterInfoVote.innerHTML))){
+            // update my vote count
+            let updatedVote =parseInt(characterInfoVote.innerHTML) +parseInt(e.target.querySelector("#votes").value)
+            characterInfoVote.innerHTML=``
+            characterInfoVote.innerHTML=updatedVote
+        }
+        form.reset()
+    })
+
+    // add an event listener on the reset button
+    resetButton.addEventListener("click", ()=>{
+        // return my vote count to the original one
+        characterInfoVote.innerHTML=``
+        characterInfoVote.innerHTML=`${originalVoteCount}`
+    })
+
+    // add event listener on our character form to add a new animal
+    addAnimalForm.addEventListener("submit", (e)=>{
+        e.preventDefault()
+        // create empty body
+        let body={}
+        // access the values of our input
+        let name=e.target.querySelector("#name").value
+        let image= e.target.querySelector("#image-url").value
+
+        // store our values in the body object
+        body.name=name
+        body.image=image
+        body.votes=0
+        console.log(body)
+
+        // post out data to the db
+        postAnimal(body)
     })
 
 
 })
-
