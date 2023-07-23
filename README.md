@@ -34,4 +34,4 @@ To run the Flatacuties app locally, follow these steps:
     Mark Kibocha - BACKEND Developer
 
 ## License
-("https://opensource.org/license/mit/")[Mit license]
+[Mit license]"https://opensource.org/license/mit/"
