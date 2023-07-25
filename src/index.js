@@ -19,6 +19,26 @@ const fetchAllAnimals = async () => {
         console.log(e)
     }
 }
+// create a fetch functon to get the first animal from our local db
+const fetchFirstAnimal = async () => {
+    try {
+        // get our response
+        const response = await fetch("http://localhost:3000/characters")
+        // check if our request is accepted
+        if (response.status != 200) {
+            // throw aan error of our own
+            throw new Error("Data is not available")
+        } else {
+            // if request is valid return our data
+            const data = await response.json()
+          // this will return the first data of our object
+            return data[0];
+        }
+
+    } catch (e) {
+        console.log(e)
+    }
+}
 
 
 // create a fetch function that gets details of one animal
@@ -92,6 +112,19 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // store my original vote
     let originalVoteCount = characterInfoVote.innerHTML;
+  
+    // add a default first animal before click
+     fetchFirstAnimal().then(
+        data=>{
+            characterInfoName.innerHTML=`${data.name}`
+            characterInfoImage.src=`${data.image}`
+            characterInfoVote.innerHTML=`${data.votes}`
+            characterInfoVote.setAttribute('id', data.id)
+  
+            originalVoteCount=0;
+        }
+    )
+
 
     // fetch my data from local db
     let animalNames = fetchAllAnimals()
